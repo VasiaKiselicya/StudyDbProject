@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% get_current_language as LANGUAGE_CODE %}
+{% block baseContent %}
+    <style>
+        li.paginate_button{
+            margin: 0;
+            padding: 0 !important;
+        }
+        li.paginate_button:hover{
+           border: 1px solid lightgrey !important;
+        }
+        table thead th.sorting:after {
+            content: "" !important;
+        }
+        table thead th.sorting_asc:after {
+            content: "" !important;
+        }
+        table thead th.sorting_desc:after {
+            content: "" !important;
+        }
+         table tbody tr {
+             border-left: ;
+         }
+        .DTTT_button embed {
+            width: 96px;
+            height: 29px;
+        }
+
+        td { white-space: nowrap; overflow: hidden; max-width:250px !important; }
+        tr { background-color: white;}
+
+        #custom-search-input{
+            padding: 3px;
+            border: solid 1px #E4E4E4;
+            border-radius: 6px;
+            background-color: #fff;
+        }
+
+        #custom-search-input input{
+            border: 0;
+            box-shadow: none;
+        }
+
+        #custom-search-input button{
+            margin: 2px 0 0 0;
+            background: none;
+            box-shadow: none;
+            border: 0;
+            color: #666666;
+            padding: 0 8px 0 10px;
+            border-left: solid 1px #ccc;
+        }
+
+        #custom-search-input button:hover{
+            border: 0;
+            box-shadow: none;
+            border-left: solid 1px #ccc;
+        }
+
+        #custom-search-input .glyphicon-search{
+            font-size: 23px;
+        }
+        #search:hover {
+            color: #861c98;
+        }
+        .row{
+            text-align: center;
+        }
+    </style>
+    <div class="container" style="margin-top: 4%">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{% trans  "Введіть пошукові дані"%}</h2>
+                <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                        <input type="text" class="form-control input-lg" placeholder="{% trans "Прізвище, номер телефону або вулиця відповідальних осіб" %}" id="search_txt"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-info btn-lg" type="submit" id="search" style="outline: none" >
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </span>
+                    </div>
+                </div>
+            </div>
+            <div class="search_result">
+                <div class="col-md-12 col-lg-12" style="margin-top: 2%;">
+                    <div id="columns-picker-1" style="margin-bottom: 4%;" hidden></div>
+                    <div style="margin-bottom: 2%; height: 7%;"></div>
+                    <h1 style="display: none;" id="search_error">{% trans "По вашому запиту даних не знайдено" %}</h1>
+                    <table class="dataTable1" style="width: 100%" id="dataTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            var lang = '{{ LANGUAGE_CODE }}';
+            var lang_url = "";
+            if(lang == 'ru'){
+                lang_url = "{% static 'Russian.json'%}";
+            }
+            else if(lang == 'uk'){
+                lang_url = "{% static 'Ukrainian.json' %}";
+            }
+            // Видаляє таблицю для подальшого перемальовування
+            function DestroyTable(table) {
+                if (table !== undefined) {
+                    $('#dataTable').DataTable().destroy();
+                    $('#dataTable').empty();
+                }
+            }
+
+            function CreateTable() {
+                var value = 'search_query=' + $('#search_txt').val();
+                var table;
+                $.ajax({
+                    url: '/person_search/',
+                    dataType: 'json',
+                    data: value,
+                    method: "GET",
+                    success: function (data) {
+                        if (data.data.length == 0) {
+                            // якщо даних немає то таблицю видаляємо( Наприклад після вдалого пошуку, йде невдалий )
+                            table = $('#dataTable tbody').val();
+                            DestroyTable(table);
+                            $('#search_error').css({'display': 'inline-block'});
+                        }
+                        else {
+                            var col = [];
+                            for (let i = 0; i < data.columns.length; ++i) {
+                                col.push({'title': data.columns[i]})
+                            }
+                            // Якщо є дані і є таблиця то видаляємо її і перемальовуємо по нових даних
+                            $('#search_error').css({'display': 'none'});
+                            table = $('#dataTable tbody').val();
+                            DestroyTable(table);
+                            $('#dataTable').DataTable({
+                                data: data.data,
+                                columns: col,
+                                buttons: ['pageLength'],
+                                language: {
+                                    url: lang_url
+                                }
+                            });
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data)
+                    }
+                });
+            }
+            // На клік по кнопці пошук
+            $('#search').click(function () {
+                CreateTable();
+            });
+            // На клік по кнопці !Enter!
+            $('#search_txt').keyup(function(e){
+                if(e.keyCode == 13)
+                {
+                    CreateTable();
+                }
+            });
+            console.log(lang);
+        });
+    </script>
+{% endblock %}

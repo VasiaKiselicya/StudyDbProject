@@ -1,0 +1,102 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block scripts %}
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.colVis.min.js"></script>
+
+    {% endblock %}
+
+    {% block title %}
+        <title>Проект з СУБД</title>
+    {% endblock %}
+    <style>
+        .language{
+            height:30px;
+            width: 150px;
+            color: #333;
+            background-color: #fff;
+            border-color: #aaa;
+            text-align: center;
+            border: 1px solid transparent;
+            margin: 0px;
+        }
+        .language:hover{
+            background-color: #b17fef;
+            color: #fff;
+        }
+        table.dataTable tr.odd {
+            background-color: #E2E4FF;
+        }
+        table.dataTable tr.even {
+            background-color: white;
+        }
+
+        table.sortable thead {
+            background-color:#eee;
+            color:#666666;
+            font-weight: bold;
+            cursor: default;
+        }
+        table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
+            content: " \25B4\25BE"
+        }
+
+        body {
+            padding-top: 50px;
+        }
+
+        .funkyradio input[type="radio"]:empty ~ label, .funkyradio input[type="checkbox"]:empty ~ label {
+            line-height: 1.4em;
+        }
+        th{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top ">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li {% if section == 'responsible_persons' %} class="active" {% endif %}><a href="/">{% trans 'Інформація про відповідальних осіб' %}</a></li>
+                <li {% if section == 'fixed_assets' %} class="active" {% endif %}><a href="/fixed_assets">{% trans 'Звіт по основних засобах' %}</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a id='Lang' href="#" class="dropdown-toggle" data-toggle="dropdown">Language<b class="caret"></b></a>
+                    <ul class="dropdown-menu" style="min-width: 0px;">
+                        <li>
+                            <form action="/i18n/setlang/" method="post" name="trans_en" id="transEnForm" style="margin: 0px;">{% csrf_token %}
+                                <button name="language" type="submit" value="en" class="language">English</button>
+                            </form>
+                        </li>
+                        <li>
+                            <form action="/i18n/setlang/" method="post" name="trans_ru" id="transRuForm" style="margin: 0px;">{% csrf_token %}
+                                <button name="language" type="submit" value="ru"  class="language">Pyccкий</button>
+                            </form>
+                        </li>
+                        <li>
+                            <form action="/i18n/setlang/" method="post" name="trans_uk" id="transUKForm" style="margin: 0px;">{% csrf_token %}
+                                <button name="language" type="submit" value="uk"  class="language">Українська</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% block baseContent %}
+{% endblock %}
+</body>
+</html>

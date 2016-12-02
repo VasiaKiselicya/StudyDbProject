@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% get_current_language as LANGUAGE_CODE %}
+{% block baseContent %}
+    <style>
+        .row{
+            text-align: center;
+        }
+    </style>
+    <div class="container" style="margin-top: 1%">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 style="margin-bottom: 2%">{% trans  "Детальна інформація про основні засоби"%}</h2>
+                <table class="dataTable1" style="width: 100%" id="dataTable"></table>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+        console.log('{{ section }}');
+            var lang = '{{ LANGUAGE_CODE }}';
+            var lang_url = "";
+            if(lang == 'ru'){
+                lang_url = "{% static 'Russian.json'%}";
+            }
+            else if(lang == 'uk'){
+                lang_url = "{% static 'Ukrainian.json' %}";
+            }
+            {% autoescape off %}
+                var data = {{ data }};
+                var col = [];
+                for (let i = 0; i < data.columns.length; ++i) {
+                    col.push({'title': data.columns[i]})
+                }
+                $('#dataTable').DataTable({
+                    data: data.data,
+                    columns: col,
+                    buttons: ['pageLength'],
+                    language: {
+                        url: lang_url
+                    }
+                });
+            {% endautoescape %}
+        })
+    </script>
+{% endblock %}
