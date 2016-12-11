@@ -25,6 +25,8 @@ class ResponsiblePersons(models.Model):
     premium = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     phone_number = models.CharField(max_length=15)
     male = models.CharField(max_length=10)
+    img_url = models.CharField(max_length=200, blank=True, null=True)
+    birthday = models.DateField(default=datetime.now)
 
 
 class FixedAssets(models.Model):
