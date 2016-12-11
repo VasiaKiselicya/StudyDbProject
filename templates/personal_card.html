@@ -29,7 +29,7 @@
             font-size: 13px;
         }
 
-        div:hover .card-outmore {
+        .card-outmore:hover {
             background: #2C3E50;
             color: #fff;
         }
@@ -122,8 +122,9 @@
         }
 
         #outmore-icon {
-            border:1px solid ;
-            padding: 1px 6px;
+            border: 1px solid;
+            margin-top: 5px;
+            padding: 3px 10px;
             border-radius: 50em;
         }
 
@@ -133,25 +134,27 @@
         }
 
     </style>
-    <div>
+    <div class="row">
         {% if not error %}
-            <div class="thecard">
-                <div class="card-img">
-                    <img src="{{ person.img_url }}">
+            <div class="col-md-12">
+                <div class="thecard">
+                    <div class="card-img">
+                        <img src="{{ person.img_url }}">
+                    </div>
+                    <div class="card-caption">
+                        <i id="like-btn" class="fa fa-thumbs-o-up"></i>
+                        <h1>{{ person.full_name }}</h1>
+                        <p class="date"><b>Дата народження :</b> {{ person.birthday }}</p>
+                        <p class="address"><b>Адреса :</b> Місто Чернівці вулиця {{ person.residence_street }}</p>
+                        <p class="phone_number"><b>Номер телефону :</b> {{ person.phone_number }}</p>
+                        <p class="salary"><b>Зарплата :</b> {{ person.salary }} грн.</p>
+                        <p class="premium"><b>Премія :</b> {{ person.premium }} грн.</p>
+                    </div>
+                    <a class="card-outmore" href="/">
+                        <h5>Повернутись до пошку</h5>
+                        <i id="outmore-icon" class="fa fa-angle-right"></i>
+                    </a>
                 </div>
-                <div class="card-caption">
-                    <i id="like-btn" class="fa fa-thumbs-o-up"></i>
-                    <h1>{{ person.full_name }}</h1>
-                    <p class="date"><b>Дата народження :</b> {{ person.birthday }}</p>
-                    <p class="address"><b>Адреса :</b> Місто Чернівці вулиця {{ person.residence_street }}</p>
-                    <p class="phone_number"><b>Номер телефону :</b> {{ person.phone_number }}</p>
-                    <p class="salary"><b>Зарплата :</b> {{ person.salary }} грн.</p>
-                    <p class="premium"><b>Премія :</b> {{ person.premium }} грн.</p>
-                </div>
-                <a class="card-outmore" href="/">
-                    <h5>Повернутись до пошку</h5>
-                    <i id="outmore-icon" class="fa fa-angle-right"></i>
-                </a>
             </div>
         {% else %}
             <h2 class="error-message">{{ error }}</h2>
